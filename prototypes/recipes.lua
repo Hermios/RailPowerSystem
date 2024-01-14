@@ -1,26 +1,26 @@
 data:extend({
     {
         type = "recipe",
-        name = electricRail,
+        name = electric_rail,
         enabled = false,
         ingredients = { { "copper-cable", 3 }, { "rail", 1 } },
-        result = electricRail,
+        result = electric_rail,
         result_count = 1,
     },
 	{
         type = "recipe",
-        name = prototypeConnector,
+        name = railpole_prototype,
         enabled = false,
         ingredients = { { "iron-plate", 3 }, { "copper-cable", 1 },{ "electronic-circuit", 1 } },
-        result = prototypeConnector,
+        result = railpole_prototype,
         result_count = 1,
     },
 	{
         type = "recipe",
-        name = hybridTrain,
+        name = electric_locomotive,
         enabled = false,
         ingredients = { { "locomotive", 1 }, { "battery", 10 }, { "electric-engine-unit", 20 } },
-        result = hybridTrain,
+        result = electric_locomotive,
         result_count = 1,
     },
 })

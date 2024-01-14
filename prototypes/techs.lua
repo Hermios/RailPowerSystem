@@ -3,20 +3,20 @@ data:extend(
   {
     type = "technology",
     name = "rail-power-system",
-    icon = "__"..ModName.."__/graphics/tech/tech.png",
+    icon = "__"..modname.."__/graphics/tech/tech.png",
     effects =
     {
       {
         type = "unlock-recipe",
-        recipe = hybridTrain
+        recipe = electric_locomotive
       },
       {
         type = "unlock-recipe",
-        recipe = prototypeConnector
+        recipe = railpole_prototype
       },
       {
         type = "unlock-recipe",
-        recipe = electricRail
+        recipe = electric_rail
       }
     },
 	icon_size=128,

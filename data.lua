@@ -1,5 +1,5 @@
-require "methods.constants"
-require "__HermiosLibs__.data"
+require "__HermiosLibs__.data-libs"
+require "constants"
 require "prototypes.items"
 require "prototypes.recipes"
 require "prototypes.techs"

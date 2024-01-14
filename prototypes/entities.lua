@@ -1,63 +1,82 @@
-function update_rail_picture_metals(data)
-	local newTable={}
-	for k,d in pairs(data) do
-		if not d then
-			newTable[k]=nil
-		elseif type(d)=="table" then
-			newTable[k]=update_rail_picture_metals(d) 
-		elseif type(d)=="string" and k=="filename" and string.find(d,"__base__/graphics/entity/%w+-rail/[%w%-]+backplates.+") then
-			newTable[k]=d
-			print("OK")
-			newTable[k]=string.gsub(newTable[k],"__%a-__/(.+)","__"..ModName.."__/%1")			 			
-		else
-			newTable[k]=d
-		end
-	end
-	return newTable 
+function create_rail_pictures(objecttype,original,newname,newdata)
+  local railtable=createdata(objecttype,original,newname,newdata)
+	for rail_position,_ in pairs(railtable.pictures) do
+      if railtable.pictures[rail_position].backplates and string.find(railtable.pictures[rail_position].backplates.filename,original,1,true) then
+        railtable.pictures[rail_position].backplates.filename=railtable.pictures[rail_position].backplates.filename:gsub(original,newname):gsub("__base__","__"..modname.."__")
+        railtable.pictures[rail_position].backplates.hr_version.filename=railtable.pictures[rail_position].backplates.hr_version.filename:gsub(original:gsub("%-","%%-"),newname):gsub("__base__","__"..modname.."__")
+      end
+    end
+  return railtable
 end
 
---train
-createData("locomotive","locomotive",hybridTrain,
+data:extend(
 {
-	icon = "__"..ModName.."__/graphics/icons/"..hybridTrain..".png",
+  {
+    type = "fuel-category",
+    name = "electrical"
+  }
+})
+
+--train
+createdata("locomotive","locomotive",electric_locomotive,{
+	corpse = "locomotive-remnants",
 	color = { r = 100, g = 100, b = 200 },
+  burner = {
+    fuel_category = "electrical",
+    effectivity = 1,
+    fuel_inventory_size = 1,
+    burnt_inventory_size = 1
+},
 })
 
 --circuit's components
-createData("rail-signal","rail-signal",prototypeConnector,
-{
+createdata("rail-signal","rail-signal",railpole_prototype,{
 	fast_replaceable_group = nil,
 	selection_box={{0, 0}, {0, 0}},
     drawing_box = {{-0.5, -2.6}, {0.5, 0.5}},
 	corpse = "rail-signal-remnants",
     draw_copper_wires=false,
 	draw_circuit_wires=false,
-	animation =
-    {
-		filename="__"..ModName.."__/graphics/entity/"..railPoleConnector..".png",
-		priority = "high",
-		width = 189,
-		height = 160,
-		frame_count = 1,
-		direction_count = 8
-    },
+	animation ={
+    filename="__"..modname.."__/graphics/entity/"..railpole..".png",
+    priority = "high",
+    width = 189,
+    height = 160,
+    frame_count = 1,
+    direction_count = 8
+  },
 	green_light = {intensity = 0, size = 0.1, color={g=1}},
-    orange_light = {intensity = 0, size = 0.1, color={r=1, g=0.5}},
-    red_light = {intensity = 0, size = 0.1, color={r=1}},
+  orange_light = {intensity = 0, size = 0.1, color={r=1, g=0.5}},
+  red_light = {intensity = 0, size = 0.1, color={r=1}},
 	circuit_connector_sprites=nil
 })
 
-createData("electric-pole","small-electric-pole",railPoleConnector,
-{
+local connection_points={}
+for i=1, 8 do
+  connection_points[i] = {
+    shadow ={
+      copper = nil,
+      green = nil,
+      red = nil
+    },
+    wire ={
+      copper = {0, -1.9},
+      green = {0, -1.9},
+      red = {0, -1.9}
+    }
+  }
+end
+
+createdata("electric-pole","small-electric-pole",railpole,{
 	icon = "__base__/graphics/icons/small-electric-pole.png",
-    minable = {mining_time = 0.5, result = prototypeConnector},
+    minable = {mining_time = 0.5, result = railpole_prototype},
 	collision_box = {{0, 0}, {0, 0}},
 	fast_replaceable_group = nil,
 	corpse="small-electric-pole-remnants",
 	flags = {"placeable-neutral", "player-creation","not-blueprintable","fast-replaceable-no-build-while-moving","placeable-off-grid","building-direction-8-way"},
 	supply_area_distance = 1,
 	pictures ={
-		filename="__"..ModName.."__/graphics/entity/"..railPoleConnector..".png",
+		filename="__"..modname.."__/graphics/entity/"..railpole..".png",
 		priority = "high",
 		line_length = 1,
 		width = 189,
@@ -65,151 +84,36 @@ createData("electric-pole","small-electric-pole",railPoleConnector,
 		direction_count = 8
     },
 	track_coverage_during_build_by_moving = false,
-	connection_points =
-    {
-      {
-        shadow =
-        {
-           copper = nil,
-          green = nil,
-          red = nil
-        },
-        wire =
-        {
-          copper = {0, -1.9},
-          green = {0, -1.9},
-          red = {0, -1.9}
-        }
-      },
-	  {
-        shadow =
-        {
-          copper = nil,
-          green = nil,
-          red = nil,
-        },
-        wire =
-        {
-          copper = {0, -1.9},
-          green = {0, -1.9},
-          red = {0, -1.9}
-        }
-      },
-	  {
-        shadow =
-        {
-           copper = nil,
-          green = nil,
-          red = nil,
-        },
-        wire =
-        {
-          copper = {0, -1.9},
-          green = {0, -1.9},
-          red = {0, -1.9}
-        }
-      },
-	  {
-        shadow =
-        {
-           copper = nil,
-          green = nil,
-          red = nil,
-        },
-        wire =
-        {
-          copper = {0, -1.9},
-          green = {0, -1.9},
-          red = {0, -1.9}
-        }
-      },
-	  {
-        shadow =
-        {
-          copper = nil,--{2.55, 0.4},
-          green = nil,--{2.0, 0.4},
-          red = nil,--{3.05, 0.4}
-        },
-        wire =
-        {
-          copper = {0, -1.9},
-          green = {0, -1.9},
-          red = {0, -1.9}
-        }
-      },
-	  {
-        shadow =
-        {
-          copper = nil,
-          green = nil,
-          red = nil,
-        },
-        wire =
-        {
-          copper = {0, -1.9},
-          green = {0, -1.9},
-          red = {0, -1.9}
-        }
-      },
-	  {
-        shadow =
-        {
-           copper = nil,
-          green = nil,
-          red = nil,
-        },
-        wire =
-        {
-          copper = {0, -1.9},
-          green = {0, -1.9},
-          red = {0, -1.9}
-        }
-      },
-	  {
-        shadow =
-      {
-          copper = nil,--{2.55, 0.4},
-          green = nil,--{2.0, 0.4},
-          red = nil,--{3.05, 0.4}
-        },
-        wire =
-        {
-          copper = {0, -1.9},
-          green = {0, -1.9},
-          red = {0, -1.9}
-        }
-      },
-    },
-}
-)
-	
-createData("electric-pole",railPoleConnector,circuitNode,
-{
-	minable= nil,	
-	draw_copper_wires=false,
+	connection_points = connection_points
+})
+
+createdata("electric-pole",railpole,electricnode,{
+	minable= nil,
+  draw_copper_wires=false,
 	draw_circuit_wires=false,
 	selectable_in_game=false,
 	collision_mask={"not-colliding-with-itself"},
 	flags = {"not-on-map","placeable-off-grid","not-blueprintable","not-deconstructable"},
-	maximum_wire_distance =3.99, 
-	supply_area_distance =0.5
-})	
-setEntityAsInvisible(data.raw["electric-pole"][circuitNode])
+	maximum_wire_distance =8,
+	supply_area_distance =0.1
+  },
+  true
+)
 
-createData("electric-energy-interface","electric-energy-interface",railElectricAccu,
-{
+createdata("electric-energy-interface","electric-energy-interface",rail_electric_accu,{
 	collision_mask={"not-colliding-with-itself"},
 	flags = {"not-on-map","placeable-off-grid","not-blueprintable","not-deconstructable"},
 	energy_production = "0W",
-    energy_usage = "0W",
-	energy_source =
+  energy_usage = "0W",
+	electric_buffer_size="20KJ",
+  energy_source =
     {
-       type = "electric",
-      buffer_capacity = "11kJ",
-      input_flow_limit = "15MJ",
+      type = "electric",
+      buffer_capacity = "20KJ",
+      input_flow_limit = "20KJ",
       drain = "0J",
       usage_priority = "primary-input",
-	  output_flow_limit = "15MJ",
+	    output_flow_limit = "0J",
     },
 	working_sound =
     {
@@ -224,24 +128,17 @@ createData("electric-energy-interface","electric-energy-interface",railElectricA
         volume = 0
       }
 	}
-})
-setEntityAsInvisible(data.raw["electric-energy-interface"][railElectricAccu])
+},true)
 
 --rail
-local electricStraightRailEntity=createData("straight-rail","straight-rail",electricStraightRail,
-{		
-	minable = {mining_time = 0.6, result = electricRail},
+create_rail_pictures("straight-rail","straight-rail",straight_rail_power,{
+	minable = {mining_time = 0.6, result = electric_rail},
 	corpse = "straight-rail-remnants",
-})	
-print("START")
-data.raw["straight-rail"][electricStraightRail]=update_rail_picture_metals(electricStraightRailEntity)
-print("END")
-local electricCurvedRailEntity=createData("curved-rail","curved-rail",electricCurvedRail,
-{		
-	icon = "__base__/graphics/icons/curved-rail.png",
-    minable = {mining_time = 0.6, result = electricRail, count=4},
-	placeable_by = { item=electricRail, count = 4},
-	corpse = "curved-rail-remnants",
 })
 
-data.raw["curved-rail"][electricCurvedRail]=update_rail_picture_metals(electricCurvedRailEntity)
+create_rail_pictures("curved-rail","curved-rail",curved_rail_power,{
+	icon = "__base__/graphics/icons/curved-rail.png",
+  minable = {mining_time = 0.6, result = electric_rail, count=4},
+	placeable_by = { item=electric_rail, count = 4},
+	corpse = "curved-rail-remnants",
+})

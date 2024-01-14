@@ -1,28 +1,25 @@
+--electrical fuel
+createdata("item","solid-fuel",electricfuel,{
+	fuel_category="electrical",
+	fuel_value="20KJ"
+},true)
+
 --train
-createData("item-with-entity-data","locomotive",hybridTrain,
-{
-	icon = "__"..ModName.."__/graphics/icons/"..hybridTrain..".png",
-})
+createdata("item-with-entity-data","locomotive",electric_locomotive)
+
 --circuit's components
-createData("item","rail-signal",prototypeConnector)
+createdata("item","rail-signal",railpole_prototype)
 
-createData("item","small-electric-pole",railPoleConnector,
-{
-	icon = "__"..ModName.."__/graphics/icons/empty.png",
-	subgroup = "transport",
-	flags = {"hidden"},
-	order = "zzz",
-})
+createdata("item","small-electric-pole",railpole,nil,true)
 
-createData("item",railPoleConnector,circuitNode)
+createdata("item",railpole,electricnode,nil,true)
 
-createData("item",railPoleConnector,railElectricAccu)
+createdata("item",railpole,rail_electric_accu)
 
 --rail
-createData("rail-planner","rail",electricRail,
-{ 
+createdata("rail-planner","rail",electric_rail,{
 	subgroup = "transport",
-	place_result = electricStraightRail,
-	straight_rail = electricStraightRail,
-	curved_rail = electricCurvedRail
+	place_result = straight_rail_power,
+	straight_rail = straight_rail_power,
+	curved_rail = curved_rail_power
 })
