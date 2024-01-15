@@ -30,7 +30,7 @@ os.rename(previous_zip_file_name,zip_file_name)
 os.remove(f"./{zip_file_name}/README.md")
 
 ################################# Set info.json ###############################
-factorio_version:os.environ['FACTORIO_RELEASE'][:os.environ['FACTORIO_RELEASE'].rfind('.')]
+factorio_version=os.environ['FACTORIO_RELEASE'][:os.environ['FACTORIO_RELEASE'].rfind('.')]
 mod_dependancies=[f"base>={os.environ['FACTORIO_RELEASE']}"]
 try:
     for dependancy in repo.get_variable("MOD_DEPENDANCIES").value.split('\r\n'):
