@@ -25,7 +25,14 @@
 		"circuit_connector_definitions",
 		"universal_connector_template",
 		"__DebugAdapter",
-		"__Profiler"
+		"__Profiler",
+		"createdata",
+		"set_entity_as_invisible",
+		"get_custom_prototype",
+		"on_built",
+		"current_prototypes",
+		"custom_prototypes",
+		"connect_all_wires"
 	],
 	"Lua.workspace.ignoreDir": [
 			".vscode",
@@ -54,7 +61,8 @@
 		"script",
 		"rendering",
 		"game",
-		"commands"
+		"commands",
+		"c:\\Program Files\\Factorio\\data"
 	],
 	"Lua.intelliSense.searchDepth": 3,
 	"Lua.diagnostics.workspaceDelay": 50,
@@ -74,5 +82,15 @@
 	],
 	"triggerTaskOnSave.tasks": {
 		"Luacheck": ["*.lua"]
-	}
+	},
+	"factorio.versions": [
+		{
+			"name": "System",
+			"factorioPath": "C:\\Program Files\\Factorio\\bin\\x64\\factorio.exe",
+			"active": true
+		}
+	],
+	"Lua.workspace.userThirdParty": [
+		"c:\\Users\\Nicolas Blexmann\\AppData\\Roaming\\Code\\User\\workspaceStorage\\7390b60636ee43413dfaf7fa7606ac7b\\justarandomgeek.factoriomod-debug\\sumneko-3rd"
+	]
 }

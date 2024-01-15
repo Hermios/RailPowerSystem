@@ -27,13 +27,31 @@ os.rename(previous_zip_file_name,zip_file_name)
 
 # remove all non factorio directories
 [shutil.rmtree(d) for d in glob(f"./{zip_file_name}/.*")]
+os.remove(f"./{zip_file_name}/README.md")
 
 ################################# Set info.json ###############################
+factorio_version:os.environ['FACTORIO_RELEASE'][:os.environ['FACTORIO_RELEASE'].rfind('.')]
+mod_dependancies=[f"base>={os.environ['FACTORIO_RELEASE']}"]
 try:
-    mod_dependancies=json.loads(repo.get_variable("MOD_DEPENDANCIES").value)
+    for dependancy in repo.get_variable("MOD_DEPENDANCIES").value.split('\r\n'):
+        if dependancy.startswith("!"):
+            mod_dependancies.append(dependancy)
+        else:    
+            mod=re.search("(\w+)",dependancy).group(1)
+            with requests.get(f"https://mods.factorio.com/api/mods/{mod}") as response:
+                last_version=None
+                for release in response.json()["releases"]:
+                    if release["info_json"]["factorio_version"]==factorio_version:
+                        last_version=release["version"]
+                if not last_version:
+                    if not dependancy.startswith("?"):
+                       print(f"mod unavailable for dependancy: {dependancy}")
+                       exit(1) 
+                else:
+                    mod_dependancies.append(f"{dependancy}>={last_version}")
 except:
-    mod_dependancies=[]
-mod_dependancies.insert(0,f"base>={os.environ['FACTORIO_RELEASE']}")
+    pass
+
 
 info_json={
   "name": repo.name,
@@ -43,7 +61,7 @@ info_json={
   "homepage": repo.url,
   "dependencies": mod_dependancies,
   "description": repo.get_variable("MOD_DESCRIPTION").value,
-  "factorio_version": os.environ['FACTORIO_RELEASE'][:os.environ['FACTORIO_RELEASE'].rfind('.')]
+  "factorio_version": factorio_version
 }
 
 # create info.json file
@@ -68,3 +86,50 @@ with ZipFile(f"{zip_file_name}.zip", "w") as zf:
         zf.write(dirname)
         for filename in files:
             zf.write(os.path.join(dirname, filename))
+
+################################# send mod ###############################
+request_headers = {"Authorization": f"Bearer {os.environ['FACTORIO_MOD_API_KEY']}"}
+
+# Get readmecontent
+list_filenames=[f.filename for f in repo.get_pull(pull_request["number"]).get_files()]
+readme=None
+if "README.md" in list_filenames:
+    readme=repo.get_contents("README.md").decoded_content.decode()
+
+data={
+    "mod": repo.name,
+    "description": readme,
+    "category":os.getenv("MOD_CATEGORY"),
+    "license":os.getenv("MOD_LICENCE"),
+    "source_url":repo.url
+}
+
+#Does mod exits
+mod_exists=requests.get(f'https://mods.factorio.com/api/mods/{repo.name}').status_code==200
+
+#Get list files to update
+if mod_exists and readme is not None:
+    response=requests.post("https://mods.factorio.com/api/v2/mods/edit_details",data=data, headers=request_headers)
+    
+    if not response.ok:
+        print(f"edit failed: {response.text}")
+        exit(1)
+    
+#Update url for mod exists or not
+init_end_point=f"https://mods.factorio.com/api/v2/mods/{'releases/init_upload' if mod_exists else 'init_publish'}"
+
+response = requests.post(init_end_point, data={"mod":repo.name}, headers=request_headers)
+
+if not response.ok:
+    print(f"{'init_upload' if mod_exists else 'init_publish'} failed: {response.text}")
+    exit(1)
+
+upload_url = response.json()["upload_url"]
+
+with open(f"{zip_file_name}.zip", "rb") as f:
+    request_body = {"file": f}
+    requests.post(upload_url, files=request_body, data=data)
+
+if not response.ok:
+    print(f"upload failed: {response.text}")
+    exit(1)
