@@ -22,12 +22,3 @@ function mod_on_built(entity)
         end
     end
 end
-
-function on_train_created(event)
-    for _,locomotive in pairs(event.train.locomotives.front_movers) do
-        on_built(locomotive)
-    end
-    for _,locomotive in pairs(event.train.locomotives.back_movers) do
-        on_built(locomotive)
-    end
-end
