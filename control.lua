@@ -1,19 +1,19 @@
-require "__HermiosLibs__.control-libs"
+require "__Hermios_Gui_Framework__.control-libs"
 require "constants"
 require "prototypes.rail-pole"
 require "prototypes.rail-power"
 require "prototypes.locomotive"
 require "methods.remote-builder"
 
-function mod_on_tick()
+table.insert(list_events.on_tick,function ()
 	for _,entity in pairs(global.custom_entities) do
 		if entity.update then
 			entity:update()
 		end
 	end
-end
+end)
 
-function mod_on_built(entity)
+table.insert(list_events.on_built,function (entity)
     if string.find(entity.type,"pole") then
         for _,neighbour in pairs(entity.neighbours.copper) do
             if get_custom_prototype(neighbour) then
@@ -21,4 +21,4 @@ function mod_on_built(entity)
             end
         end
     end
-end
+end)

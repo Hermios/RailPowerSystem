@@ -32,7 +32,8 @@
 		"on_built",
 		"current_prototypes",
 		"custom_prototypes",
-		"connect_all_wires"
+		"connect_all_wires",
+		"list_events"
 	],
 	"Lua.workspace.ignoreDir": [
 			".vscode",

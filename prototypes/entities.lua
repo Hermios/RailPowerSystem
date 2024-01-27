@@ -1,16 +1,15 @@
-function create_rail_pictures(objecttype,original,newname,newdata)
-  local railtable=createdata(objecttype,original,newname,newdata)
-	for rail_position,_ in pairs(railtable.pictures) do
-      if railtable.pictures[rail_position].backplates and string.find(railtable.pictures[rail_position].backplates.filename,original,1,true) then
-        railtable.pictures[rail_position].backplates.filename=railtable.pictures[rail_position].backplates.filename:gsub(original,newname):gsub("__base__","__"..modname.."__")
-        railtable.pictures[rail_position].backplates.hr_version.filename=railtable.pictures[rail_position].backplates.hr_version.filename:gsub(original:gsub("%-","%%-"),newname):gsub("__base__","__"..modname.."__")
+function update_rail_pictures(oldname,newname)
+  for orientation,pictures in pairs(data.raw[oldname][oldname]["pictures"]) do
+    for k,v in pairs(pictures) do
+      if k~="backplates" then
+        data.raw[oldname][newname]["pictures"][orientation][k]=v
       end
     end
-  return railtable
+  end
+  
 end
 
-data:extend(
-{
+data:extend({
   {
     type = "fuel-category",
     name = "electrical"
@@ -26,33 +25,19 @@ createdata("locomotive","locomotive",electric_locomotive,{
     effectivity = 1,
     fuel_inventory_size = 1,
     burnt_inventory_size = 1
-},
+  },
+  minimap_representation=data.raw["locomotive"]["locomotive"].minimap_representation,
+  pictures=data.raw["locomotive"]["locomotive"].pictures,
+  selected_minimap_representation=data.raw["locomotive"]["locomotive"].selected_minimap_representation,
+  water_reflection=data.raw["locomotive"]["locomotive"].water_reflection,
+  wheels=data.raw["locomotive"]["locomotive"].wheels
 })
 
 --circuit's components
-createdata("rail-signal","rail-signal",railpole_prototype,{
-	fast_replaceable_group = nil,
-	selection_box={{0, 0}, {0, 0}},
-    drawing_box = {{-0.5, -2.6}, {0.5, 0.5}},
-	corpse = "rail-signal-remnants",
-    draw_copper_wires=false,
-	draw_circuit_wires=false,
-	animation ={
-    filename="__"..modname.."__/graphics/entity/"..railpole..".png",
-    priority = "high",
-    width = 189,
-    height = 160,
-    frame_count = 1,
-    direction_count = 8
-  },
-	green_light = {intensity = 0, size = 0.1, color={g=1}},
-  orange_light = {intensity = 0, size = 0.1, color={r=1, g=0.5}},
-  red_light = {intensity = 0, size = 0.1, color={r=1}},
-	circuit_connector_sprites=nil
-})
+createdata("rail-signal","rail-signal",railpole_prototype,nil,true)
 
 local connection_points={}
-for i=1, 8 do
+for i=1, 4 do
   connection_points[i] = {
     shadow ={
       copper = nil,
@@ -68,25 +53,18 @@ for i=1, 8 do
 end
 
 createdata("electric-pole","small-electric-pole",railpole,{
-	icon = "__base__/graphics/icons/small-electric-pole.png",
-    minable = {mining_time = 0.5, result = railpole_prototype},
-	collision_box = {{0, 0}, {0, 0}},
-	fast_replaceable_group = nil,
-	corpse="small-electric-pole-remnants",
-	flags = {"placeable-neutral", "player-creation","not-blueprintable","fast-replaceable-no-build-while-moving","placeable-off-grid","building-direction-8-way"},
+	minable = {mining_time = 0.5, result = railpole_prototype},
 	supply_area_distance = 1,
 	pictures ={
-		filename="__"..modname.."__/graphics/entity/"..railpole..".png",
+		filename="__"..modname.."__/graphics/entity/rail-pole/"..railpole..".png",
 		priority = "high",
 		line_length = 1,
 		width = 189,
 		height = 160,
-		direction_count = 8
+		direction_count = 4
     },
-	track_coverage_during_build_by_moving = false,
 	connection_points = connection_points
 })
-
 createdata("electric-pole",railpole,electricnode,{
 	minable= nil,
   draw_copper_wires=false,
@@ -131,14 +109,14 @@ createdata("electric-energy-interface","electric-energy-interface",rail_electric
 },true)
 
 --rail
-create_rail_pictures("straight-rail","straight-rail",straight_rail_power,{
+createdata("straight-rail","straight-rail",straight_rail_power,{
 	minable = {mining_time = 0.6, result = electric_rail},
-	corpse = "straight-rail-remnants",
 })
+update_rail_pictures("straight-rail",straight_rail_power)
 
-create_rail_pictures("curved-rail","curved-rail",curved_rail_power,{
+createdata("curved-rail","curved-rail",curved_rail_power,{
 	icon = "__base__/graphics/icons/curved-rail.png",
   minable = {mining_time = 0.6, result = electric_rail, count=4},
 	placeable_by = { item=electric_rail, count = 4},
-	corpse = "curved-rail-remnants",
 })
+update_rail_pictures("curved-rail",curved_rail_power)
