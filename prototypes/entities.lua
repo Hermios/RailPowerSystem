@@ -6,7 +6,6 @@ function update_rail_pictures(oldname,newname)
       end
     end
   end
-  
 end
 
 data:extend({
@@ -34,9 +33,8 @@ createdata("locomotive","locomotive",electric_locomotive,{
 })
 
 --circuit's components
-createdata("rail-signal","rail-signal",railpole_prototype,nil,true)
-
 local connection_points={}
+local connection_sprites={}
 for i=1, 4 do
   connection_points[i] = {
     shadow ={
@@ -50,7 +48,33 @@ for i=1, 4 do
       red = {0, -1.9}
     }
   }
+  connection_sprites[i] =circuit_connector_definitions["rail-signal"].sprites[i]
 end
+
+createdata("rail-signal","rail-signal",railpole_prototype,{
+  rail_piece=data.raw["rail-signal"]["rail-signal"].rail_piece,
+  animation={
+    layers={
+      {
+        filename = "__"..modname.."__/graphics/entity/"..railpole_prototype.."/"..railpole_prototype..".png",
+        priority = "extra-high",
+        width = 189,
+        height = 160,
+        direction_count = 4,
+        hr_version =
+        {
+          filename = "__"..modname.."__/graphics/entity/"..railpole_prototype.."/hr-"..railpole_prototype..".png",
+          priority = "extra-high",
+          width = 189,
+          height = 160,
+          direction_count = 4
+        }
+      }
+    }
+  },
+  circuit_wire_connection_points = connection_points,
+  circuit_connector_sprites=connection_sprites
+})
 
 createdata("electric-pole","small-electric-pole",railpole,{
 	minable = {mining_time = 0.5, result = railpole_prototype},
@@ -63,7 +87,7 @@ createdata("electric-pole","small-electric-pole",railpole,{
 		height = 160,
 		direction_count = 4
     },
-	connection_points = connection_points
+    connection_points = connection_points
 })
 createdata("electric-pole",railpole,electricnode,{
 	minable= nil,
@@ -72,7 +96,7 @@ createdata("electric-pole",railpole,electricnode,{
 	selectable_in_game=false,
 	collision_mask={"not-colliding-with-itself"},
 	flags = {"not-on-map","placeable-off-grid","not-blueprintable","not-deconstructable"},
-	maximum_wire_distance =8,
+	maximum_wire_distance =8.5,
 	supply_area_distance =0.1
   },
   true
@@ -112,6 +136,7 @@ createdata("electric-energy-interface","electric-energy-interface",rail_electric
 createdata("straight-rail","straight-rail",straight_rail_power,{
 	minable = {mining_time = 0.6, result = electric_rail},
 })
+
 update_rail_pictures("straight-rail",straight_rail_power)
 
 createdata("curved-rail","curved-rail",curved_rail_power,{
