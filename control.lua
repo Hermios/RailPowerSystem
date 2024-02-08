@@ -14,10 +14,12 @@ table.insert(list_events.on_tick,function ()
 end)
 
 table.insert(list_events.on_built,function (entity)
-    if string.find(entity.type,"pole") then
-        for _,neighbour in pairs(entity.neighbours.copper) do
-            if get_custom_prototype(neighbour) then
-                entity.disconnect_neighbour(neighbour)
+    if entity.valid and entity.type=="electric-pole" then
+        for _,pole in pairs(game.get_surface(1).find_entities_filtered{position=entity.position,radius=entity.prototype.max_wire_distance,type="electric-pole"}) do
+            if pole.name==electricnode then
+                entity.disconnect_neighbour(pole)
+            else
+                entity.connect_neighbour(pole)
             end
         end
     end
