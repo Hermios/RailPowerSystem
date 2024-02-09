@@ -1,4 +1,4 @@
-require "__Hermios_Gui_Framework__.control-libs"
+require "__Hermios_Framework__.control-libs"
 require "constants"
 require "prototypes.rail-pole"
 require "prototypes.rail-power"
