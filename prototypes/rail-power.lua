@@ -36,6 +36,9 @@ function railprototype:on_built()
 end
 
 function railprototype:connect()
+	if not self.entity or not self.entity.valid then
+		return
+	end
 	self.electricnode.disconnect_neighbour()
 	--connect to other rails
 	for _,rail in pairs(self:get_connected_powerrails()) do
