@@ -12,7 +12,7 @@ function locomotive:new(entity)
 end
 
 function locomotive:update()
-	if not self.entity.valid or not self.entity.is_headed_to_trains_front  then
+	if not self.entity.valid  then
 		return
 	end
 	local required_fuel=self.stack_size-self.entity.get_item_count()
