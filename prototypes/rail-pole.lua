@@ -10,10 +10,8 @@ function railpoleconnector_prototype:new(entity)
 	if not rail_pole then
 		return
 	end
-	for wire,targets in pairs(entity.circuit_connected_entities) do
-		for _,target in pairs(targets) do
-			rail_pole.connect_neighbour{wire=defines.wire_type[wire],target_entity=target}
-		end
+	for  _,connection in pairs(entity.circuit_connection_definitions) do
+		rail_pole.connect_neighbour(connection)
 	end
 	local o={
 		entity=rail_pole,

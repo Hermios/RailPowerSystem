@@ -15,16 +15,14 @@ end)
 
 table.insert(list_events.on_built,function (entity)
     if entity.valid and entity.type=="entity-ghost" and entity.ghost_name==railpole then
-        local connections=entity.circuit_connected_entities
+        local connections=entity.circuit_connection_definitions
         local surface=entity.surface
         local position=entity.position
         local force=entity.force
         entity.destroy()
         local ghost=surface.create_entity{name="entity-ghost",inner_name=railpole_prototype,position=position,force=force}
-        for wire,targets in pairs(connections) do
-            for _,target in pairs(targets) do
-                ghost.connect_neighbour{wire=defines.wire_type[wire],target_entity=target}
-            end
+        for _,connection in pairs(connections) do
+            ghost.connect_neighbour(connection)
         end
     end
     if entity.valid and entity.type=="electric-pole" then
