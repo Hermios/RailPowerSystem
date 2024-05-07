@@ -38,6 +38,9 @@ end)
 
 table.insert(list_events.on_entity_destroyed,function(event)
     local destroyed_item_data=destroyed_railpoles[event.unit_number]
+    if not destroyed_item_data then
+        return
+    end
     local ghosts=destroyed_item_data.surface.find_entities_filtered{position=destroyed_item_data.position,name="entity-ghost",ghost_name=railpole}
 	if #ghosts>0 then
 		local old_ghost=ghosts[1]
