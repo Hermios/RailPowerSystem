@@ -90,7 +90,7 @@ createdata("electric-pole","small-electric-pole",railpole,{
     connection_points = connection_points
 })
 createdata("electric-pole",railpole,electricnode,{
-	minable= nil,
+  minable= nil,
   draw_copper_wires=false,
 	draw_circuit_wires=false,
 	selectable_in_game=false,
@@ -132,16 +132,23 @@ createdata("electric-energy-interface","electric-energy-interface",rail_electric
 	}
 },true)
 
+data.raw["electric-energy-interface"][rail_electric_accu].icon="__"..modname.."__/graphics/icons/"..electric_rail..".png"
+
 --rail
 createdata("straight-rail","straight-rail",straight_rail_power,{
 	minable = {mining_time = 0.6, result = electric_rail},
+  fast_replaceable_group = "straight-rail"
 })
 
 update_rail_pictures("straight-rail",straight_rail_power)
+data.raw["straight-rail"]["straight-rail"].fast_replaceable_group = "straight-rail"
 
 createdata("curved-rail","curved-rail",curved_rail_power,{
 	icon = "__base__/graphics/icons/curved-rail.png",
   minable = {mining_time = 0.6, result = electric_rail, count=4},
 	placeable_by = { item=electric_rail, count = 4},
+  fast_replaceable_group = "curved-rail"
 })
 update_rail_pictures("curved-rail",curved_rail_power)
+
+data.raw["curved-rail"]["curved-rail"].fast_replaceable_group = "curved-rail"

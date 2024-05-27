@@ -15,15 +15,13 @@ function locomotive:update()
 	if not self.entity.valid  then
 		return
 	end
-	local required_fuel=self.stack_size-self.entity.get_item_count()
-	if required_fuel>0 then
+	if self.burner.heat <self.burner.heat_capacity*0.1 then
 		local rail=global.custom_entities[(self.train.front_rail or self.train.back_rail).unit_number]
 		if rail and rail.accu.energy>=self.ratio_fuel then
-			local required_energy=required_fuel*self.ratio_fuel
+			local required_energy=self.burner.heat_capacity*0.99-self.burner.heat
 			local power_transfer = math.min(rail.accu.energy,required_energy)
-			local power_fuel=math.floor(power_transfer/self.ratio_fuel)
-			self.entity.get_fuel_inventory().insert({name=electricfuel, count=power_fuel})
-			rail.accu.energy=rail.accu.energy-power_fuel*self.ratio_fuel
+			self.burner.heat=self.burner.heat+power_transfer
+			rail.accu.energy=rail.accu.energy-power_transfer
 		end
 	end
 end
