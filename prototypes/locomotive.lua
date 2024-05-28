@@ -17,7 +17,7 @@ function locomotive:update()
 	end
 	if self.burner.heat <self.burner.heat_capacity*0.1 then
 		local rail=global.custom_entities[(self.train.front_rail or self.train.back_rail).unit_number]
-		if rail and rail.accu.energy>=self.ratio_fuel then
+		if rail and rail.accu.energy>0 then
 			local required_energy=self.burner.heat_capacity*0.99-self.burner.heat
 			local power_transfer = math.min(rail.accu.energy,required_energy)
 			self.burner.heat=self.burner.heat+power_transfer
