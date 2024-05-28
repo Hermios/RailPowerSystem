@@ -107,12 +107,12 @@ createdata("electric-energy-interface","electric-energy-interface",rail_electric
 	flags = {"not-on-map","placeable-off-grid","not-blueprintable","not-deconstructable"},
 	energy_production = "0W",
   energy_usage = "0W",
-	electric_buffer_size="20KJ",
+	electric_buffer_size="1MJ",
   energy_source =
     {
       type = "electric",
-      buffer_capacity = "20KJ",
-      input_flow_limit = "20KJ",
+      buffer_capacity = "1MJ",
+      input_flow_limit = "1MJ",
       drain = "0J",
       usage_priority = "primary-input",
 	    output_flow_limit = "0J",
