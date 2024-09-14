@@ -66,7 +66,9 @@ end
 
 function railpoleconnector_prototype:on_removed()
 	for _,rail in pairs(self.rails or {}) do
-		rail:connect()
+		if rail and rail.connect then
+			rail:connect()
+		end
 	end
 	destroyed_railpoles[self.entity.unit_number]={
 		position=self.entity.position,

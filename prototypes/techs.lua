@@ -8,10 +8,6 @@ data:extend(
     {
       {
         type = "unlock-recipe",
-        recipe = electric_locomotive
-      },
-      {
-        type = "unlock-recipe",
         recipe = railpole_prototype
       },
       {
@@ -28,6 +24,36 @@ data:extend(
       {
         {"automation-science-pack", 1},
         {"logistic-science-pack", 1}
+      },
+      time = 15
+    },
+    order = "a-d-d",
+  }
+})
+
+data:extend(
+{
+  {
+    type = "technology",
+    name = "electric-locomotive",
+    icon = "__"..modname.."__/graphics/tech/electric-locomotive.jpg",
+    effects =
+    {
+      {
+        type = "unlock-recipe",
+        recipe = electric_locomotive
+      }
+    },
+	icon_size=128,
+    prerequisites = {"rail-power-system","electric-engine","battery"},
+    unit =
+    {
+      count = 75,
+      ingredients =
+      {
+        {"automation-science-pack", 1},
+        {"logistic-science-pack", 1},
+        {"chemical-science-pack", 1}
       },
       time = 15
     },
