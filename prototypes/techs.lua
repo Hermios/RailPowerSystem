@@ -45,7 +45,7 @@ data:extend(
       }
     },
 	icon_size=128,
-    prerequisites = {"rail-power-system","electric-engine"},
+    prerequisites = {"rail-power-system","electric-engine","battery"},
     unit =
     {
       count = 75,

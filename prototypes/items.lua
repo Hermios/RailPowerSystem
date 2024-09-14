@@ -1,7 +1,7 @@
 --electrical fuel
 createdata("item","solid-fuel",electricfuel,{
 	fuel_category="electrical",
-	fuel_value="20KJ",
+	fuel_value="40MJ",
 	stack_size=1,
 	icon="__"..modname.."__/graphics/icons/"..electricfuel..".png"
 },true)

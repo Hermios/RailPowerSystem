@@ -19,7 +19,7 @@ data:extend({
         type = "recipe",
         name = electric_locomotive,
         enabled = false,
-        ingredients = { { "locomotive", 1 }, { "electric-engine-unit", 20 } },
+        ingredients = { { "locomotive", 1 }, { "battery-equipment", 10 }, { "electric-engine-unit", 20 } },
         result = electric_locomotive,
         result_count = 1,
     },
